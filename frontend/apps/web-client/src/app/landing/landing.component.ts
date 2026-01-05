@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { LoginComponent, AuthService } from '@features/auth';
+import { environment } from '../../environments/environment';
 
 interface Plan {
     id: number;
@@ -28,7 +29,7 @@ export class LandingComponent implements OnInit {
     showLogin = false;
 
     constructor() { // Converted to inject style for consistency
-        this.plans$ = this.http.get<Plan[]>('http://localhost:8000/api/v1/tenants/plans').pipe(
+        this.plans$ = this.http.get<Plan[]>(`${environment.apiUrl}/api/v1/tenants/plans`).pipe(
             catchError(err => {
                 console.error('Failed to fetch plans', err);
                 return of([

@@ -4,6 +4,7 @@ import { TenantAdminService, Form, FormCreate } from '../tenant-admin.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
+import { environment } from '../../../../../../apps/web-client/src/environments/environment';
 
 type FieldType = 'input' | 'text' | 'rating' | 'boolean' | 'email' | 'phone' | 'date' | 'select' | 'checkbox' | 'file';
 
@@ -467,7 +468,7 @@ export class FormEditorComponent implements OnInit {
     if (!url) return '';
     if (url.startsWith('http')) return url;
     if (url.startsWith('/')) {
-      return `http://localhost:8000${url}`;
+      return `${environment.apiUrl}${url}`;
     }
     return url;
   }

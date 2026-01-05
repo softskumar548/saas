@@ -2,14 +2,15 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { TenantAdminService } from '../tenant-admin.service';
+import { environment } from '../../../../../../apps/web-client/src/environments/environment';
 
 type BrandingState = 'dashboard' | 'success';
 
 @Component({
-    selector: 'lib-tenant-settings',
-    standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
-    template: `
+  selector: 'lib-tenant-settings',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  template: `
     <div class="max-w-2xl mx-auto py-12 px-4">
       <h1 class="text-3xl font-bold text-gray-900 mb-2">Brand Settings</h1>
       <p class="text-gray-600 mb-6">Customize your company branding.</p>
@@ -89,110 +90,110 @@ type BrandingState = 'dashboard' | 'success';
   `
 })
 export class SettingsComponent implements OnInit {
-    private fb = inject(FormBuilder);
-    private service = inject(TenantAdminService);
+  private fb = inject(FormBuilder);
+  private service = inject(TenantAdminService);
 
-    state: BrandingState = 'dashboard';
-    analyzing = false;
-    saving = false;
-    tenant: any = null;
-    selectedLogoFile: File | null = null;
-    logoPreviewUrl: string | null = null;
+  state: BrandingState = 'dashboard';
+  analyzing = false;
+  saving = false;
+  tenant: any = null;
+  selectedLogoFile: File | null = null;
+  logoPreviewUrl: string | null = null;
 
-    form = this.fb.group({
-        name: ['', Validators.required],
-        tagline: [''],
-        logo_url: [''],
-        logo_position: ['top-left'],
-        primary_color: ['#4F46E5'],
-        secondary_color: ['#374151'],
-        accent_color: ['#F3F4F6'],
-        font_family: ['Inter'],
-        address: [''],
-        is_branding_approved: [false]
+  form = this.fb.group({
+    name: ['', Validators.required],
+    tagline: [''],
+    logo_url: [''],
+    logo_position: ['top-left'],
+    primary_color: ['#4F46E5'],
+    secondary_color: ['#374151'],
+    accent_color: ['#F3F4F6'],
+    font_family: ['Inter'],
+    address: [''],
+    is_branding_approved: [false]
+  });
+
+  ngOnInit() {
+    this.loadTenant();
+  }
+
+  loadTenant() {
+    this.service.getTenant().subscribe(tenant => {
+      this.tenant = tenant;
+      this.form.patchValue(tenant);
+      this.form.markAsPristine();
     });
+  }
 
-    ngOnInit() {
-        this.loadTenant();
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedLogoFile = file;
+      if (this.logoPreviewUrl) {
+        URL.revokeObjectURL(this.logoPreviewUrl);
+      }
+      this.logoPreviewUrl = URL.createObjectURL(file);
+      this.form.markAsDirty();
     }
+  }
 
-    loadTenant() {
-        this.service.getTenant().subscribe(tenant => {
-            this.tenant = tenant;
-            this.form.patchValue(tenant);
-            this.form.markAsPristine();
-        });
-    }
+  onApprove() {
+    if (this.form.valid) {
+      const password = prompt('Please enter your password to confirm branding changes:');
+      if (!password) return;
 
-    onFileSelected(event: any) {
-        const file = event.target.files[0];
-        if (file) {
-            this.selectedLogoFile = file;
-            if (this.logoPreviewUrl) {
-                URL.revokeObjectURL(this.logoPreviewUrl);
-            }
-            this.logoPreviewUrl = URL.createObjectURL(file);
-            this.form.markAsDirty();
+      this.saving = true;
+
+      const formData = new FormData();
+      const val = this.form.value;
+
+      formData.append('name', val.name || '');
+      formData.append('tagline', val.tagline || '');
+      formData.append('logo_position', val.logo_position || 'top-left');
+      formData.append('primary_color', val.primary_color || '#4F46E5');
+      formData.append('secondary_color', val.secondary_color || '');
+      formData.append('accent_color', val.accent_color || '');
+      formData.append('font_family', val.font_family || 'Inter');
+      formData.append('address', val.address || '');
+      formData.append('password', password);
+
+      if (this.selectedLogoFile) {
+        formData.append('logo_file', this.selectedLogoFile);
+      }
+
+      this.service.approveBranding(formData).subscribe({
+        next: () => {
+          this.saving = false;
+          this.state = 'success';
+          this.form.markAsPristine();
+          this.selectedLogoFile = null;
+          if (this.logoPreviewUrl) {
+            URL.revokeObjectURL(this.logoPreviewUrl);
+            this.logoPreviewUrl = null;
+          }
+          setTimeout(() => this.state = 'dashboard', 3000);
+          this.loadTenant(); // Reload to get the new logo_url from backend
+        },
+        error: (err) => {
+          this.saving = false;
+          alert(err.error?.detail || 'Error saving branding');
         }
+      });
     }
+  }
 
-    onApprove() {
-        if (this.form.valid) {
-            const password = prompt('Please enter your password to confirm branding changes:');
-            if (!password) return;
-
-            this.saving = true;
-
-            const formData = new FormData();
-            const val = this.form.value;
-
-            formData.append('name', val.name || '');
-            formData.append('tagline', val.tagline || '');
-            formData.append('logo_position', val.logo_position || 'top-left');
-            formData.append('primary_color', val.primary_color || '#4F46E5');
-            formData.append('secondary_color', val.secondary_color || '');
-            formData.append('accent_color', val.accent_color || '');
-            formData.append('font_family', val.font_family || 'Inter');
-            formData.append('address', val.address || '');
-            formData.append('password', password);
-
-            if (this.selectedLogoFile) {
-                formData.append('logo_file', this.selectedLogoFile);
-            }
-
-            this.service.approveBranding(formData).subscribe({
-                next: () => {
-                    this.saving = false;
-                    this.state = 'success';
-                    this.form.markAsPristine();
-                    this.selectedLogoFile = null;
-                    if (this.logoPreviewUrl) {
-                        URL.revokeObjectURL(this.logoPreviewUrl);
-                        this.logoPreviewUrl = null;
-                    }
-                    setTimeout(() => this.state = 'dashboard', 3000);
-                    this.loadTenant(); // Reload to get the new logo_url from backend
-                },
-                error: (err) => {
-                    this.saving = false;
-                    alert(err.error?.detail || 'Error saving branding');
-                }
-            });
-        }
+  viewPublicForm() {
+    if (this.tenant?.slug) {
+      window.open(`/f/${this.tenant.slug}`, '_blank');
     }
+  }
 
-    viewPublicForm() {
-        if (this.tenant?.slug) {
-            window.open(`/f/${this.tenant.slug}`, '_blank');
-        }
+  getLogoUrl(url: string | null | undefined) {
+    if (!url) return '';
+    if (url.startsWith('http')) return url;
+    if (url.startsWith('/')) {
+      return `${environment.apiUrl}${url}`;
     }
-
-    getLogoUrl(url: string | null | undefined) {
-        if (!url) return '';
-        if (url.startsWith('http')) return url;
-        if (url.startsWith('/')) {
-            return `http://localhost:8000${url}`;
-        }
-        return url;
-    }
+    return url;
+  }
 }

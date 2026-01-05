@@ -4,6 +4,7 @@ import { appRoutes } from './app.routes';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { ApiConfiguration } from '@shared/api-client';
 import { authInterceptor } from './auth.interceptor';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,7 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     {
       provide: ApiConfiguration,
-      useValue: { rootUrl: 'http://localhost:8000' }
+      useValue: { rootUrl: environment.apiUrl }
     }
   ],
 };

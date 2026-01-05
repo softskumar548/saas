@@ -59,9 +59,7 @@ import { Router } from '@angular/router';
             </button>
           </div>
         </form>
-        <div class="text-center text-xs text-gray-500 mt-6">
-          <p>Demo? Use <span class="font-mono bg-gray-100 px-1 py-0.5 rounded text-gray-700">admin@saas.com</span> / <span class="font-mono bg-gray-100 px-1 py-0.5 rounded text-gray-700">adminpassword</span></p>
-        </div>
+
       </div>
     </div>
   `

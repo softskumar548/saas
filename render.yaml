@@ -36,4 +36,4 @@ databases:
     region: singapore
     plan: free
     databaseName: qrfeedback
-    user: postgres
+    user: saas_user

@@ -26,13 +26,20 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # CORS Configuration
+# CORS Configuration
+from app.core.config import settings
+
 origins = [
     "http://localhost",
-    "http://localhost:4200",  # Angular default
-    "http://localhost:4201",  # Angular secondary
-    "http://localhost:8100",  # Ionic default
-    "*" # For dev
+    "http://localhost:4200",
+    "http://localhost:4201",
+    "http://localhost:8100",
 ]
+
+# Add origins from settings
+if settings.BACKEND_CORS_ORIGINS:
+    for origin in settings.BACKEND_CORS_ORIGINS:
+        origins.append(str(origin).rstrip("/"))
 
 app.add_middleware(
     CORSMiddleware,

@@ -5,8 +5,7 @@ services:
     env: docker
     region: singapore
     plan: free
-    rootDir: .
-    context: backend
+    rootDir: backend
     dockerfilePath: Dockerfile
     envVars:
       - key: DATABASE_URL
@@ -26,7 +25,6 @@ services:
     region: singapore
     plan: free
     rootDir: .
-    context: .
     dockerfilePath: frontend/apps/web-client/Dockerfile
     envVars:
       - key: NGINX_PORT
@@ -39,6 +37,3 @@ databases:
     plan: free
     databaseName: qrfeedback
     user: postgres
-
-# Note: The free tier on Render has limitations (spins down after inactivity).
-# Perfect for testing purposes.

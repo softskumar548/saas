@@ -52,10 +52,15 @@ app.add_middleware(
 app.add_middleware(MonitoringMiddleware)
 
 from datetime import datetime
+from app.initial_data import init as init_db
 
 @app.on_event("startup")
 async def startup_event():
     app.state.start_time = datetime.utcnow()
+    try:
+        init_db()
+    except Exception as e:
+        print(f"Error initializing database: {e}")
 
 @app.get("/")
 def read_root():

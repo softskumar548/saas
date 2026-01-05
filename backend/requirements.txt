@@ -12,3 +12,4 @@ email-validator
 slowapi
 pytesseract
 pillow
+qrcode

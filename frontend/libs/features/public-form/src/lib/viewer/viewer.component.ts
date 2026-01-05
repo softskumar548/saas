@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Api } from '@shared/api-client';
 import { getPublicFormApiV1FormsPublicSlugGet, submitFeedbackApiV1FormsPublicFeedbackPost } from '@shared/api-client';
 import { ValuesCreate } from '@shared/api-client';
+import { environment } from '../../../../../../../apps/web-client/src/environments/environment';
 
 @Component({
   selector: 'lib-form-viewer',
@@ -333,7 +334,7 @@ export class FormViewerComponent implements OnInit {
     if (!url) return '';
     if (url.startsWith('http')) return url;
     if (url.startsWith('/')) {
-      return `http://localhost:8000${url}`;
+      return `${environment.apiUrl}${url}`;
     }
     return url;
   }

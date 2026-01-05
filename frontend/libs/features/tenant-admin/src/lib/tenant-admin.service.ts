@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../../apps/web-client/src/environments/environment';
 
 // Define interfaces locally or import from shared lib if available
 export interface Location {
@@ -24,7 +25,7 @@ export interface LocationCreate {
 })
 export class TenantAdminService {
     private http = inject(HttpClient);
-    private apiUrl = 'http://localhost:8000/api/v1'; // TODO: Env
+    private apiUrl = `${environment.apiUrl}/api/v1`;
 
     getLocations(): Observable<Location[]> {
         return this.http.get<Location[]>(`${this.apiUrl}/locations/`);

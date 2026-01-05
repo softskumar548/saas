@@ -6,6 +6,7 @@ import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../../../../apps/web-client/src/environments/environment';
 
 export interface User {
     id: number;
@@ -61,7 +62,7 @@ export class AuthService {
 
     async fetchProfile() {
         try {
-            const user = await firstValueFrom(this.http.get<User>('http://localhost:8000/api/v1/users/me'));
+            const user = await firstValueFrom(this.http.get<User>(`${environment.apiUrl}/api/v1/users/me`));
             this.user.set(user);
         } catch (e) {
             console.error('Failed to fetch user profile', e);

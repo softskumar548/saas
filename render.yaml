@@ -25,7 +25,8 @@ services:
     region: singapore
     plan: free
     rootDir: frontend
-    dockerfilePath: frontend/apps/web-client/Dockerfile
+    # Path relative to rootDir (which is 'frontend')
+    dockerfilePath: apps/web-client/Dockerfile
     envVars:
       - key: NGINX_PORT
         value: "80"

@@ -1,12 +1,13 @@
 services:
-  # Backend Service
+  # Backend Service (Native Python)
   - type: web
     name: saas-backend
-    env: docker
+    env: python
     region: singapore
     plan: free
     rootDir: backend
-    dockerfilePath: Dockerfile
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -16,23 +17,31 @@ services:
         generateValue: true
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: "60"
+      - key: PYTHON_VERSION
+        value: "3.11.0"
     autoDeploy: false
 
-  # Frontend Service
-  - type: web
+  # Frontend Service (Static Site)
+  - type: static
     name: saas-frontend
-    env: docker
+    env: static
     region: singapore
     plan: free
     rootDir: frontend
-    # Path relative to rootDir (which is 'frontend')
-    dockerfilePath: apps/web-client/Dockerfile
+    # Build command: Install dependencies -> Build for production
+    buildCommand: npm install && npx nx build web-client --configuration=production
+    # Publish directory: Where the build output goes
+    staticPublishPath: dist/apps/web-client
     envVars:
-      - key: NGINX_PORT
-        value: "80"
+      - key: NODE_VERSION
+        value: "20"
       - key: NODE_OPTIONS
-        value: "--max-old-space-size=460"
+        value: "--max-old-space-size=4096"
     autoDeploy: false
+    routes:
+      - type: rewrite
+        source: /**
+        destination: /index.html
 
 databases:
   - name: saas-db

@@ -1,5 +1,5 @@
 services:
-  # Backend Service (Native Python)
+  # Backend Service (Native Python Web Service)
   - type: web
     name: saas-backend
     env: python
@@ -21,27 +21,23 @@ services:
         value: "3.11.0"
     autoDeploy: false
 
-  # Frontend Service (Static Site)
-  - type: static
+  # Frontend Service (Node.js Web Service serving Static Files)
+  - type: web
     name: saas-frontend
-    env: static
+    env: node
     region: singapore
     plan: free
     rootDir: frontend
-    # Build command: Install dependencies -> Build for production
+    # Build: Install deps -> Build Angular
     buildCommand: npm install && npx nx build web-client --configuration=production
-    # Publish directory: Where the build output goes
-    staticPublishPath: dist/apps/web-client
+    # Start: Use angular-http-server to serve the dist folder (handles SPA routing)
+    startCommand: npx angular-http-server --path dist/apps/web-client -p $PORT
     envVars:
       - key: NODE_VERSION
         value: "20"
       - key: NODE_OPTIONS
         value: "--max-old-space-size=4096"
     autoDeploy: false
-    routes:
-      - type: rewrite
-        source: /**
-        destination: /index.html
 
 databases:
   - name: saas-db

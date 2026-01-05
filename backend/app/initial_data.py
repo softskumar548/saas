@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 def init():
     # Create Tables
+    logger.info(f"Creating tables for: {SQLModel.metadata.tables.keys()}")
     SQLModel.metadata.create_all(engine)
     
     with Session(engine) as session:

@@ -11,6 +11,12 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str
 
+    @validator("DATABASE_URL", pre=True)
+    def assemble_db_connection(cls, v: Optional[str]) -> Any:
+        if isinstance(v, str) and v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql://", 1)
+        return v
+
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)

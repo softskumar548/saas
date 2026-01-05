@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+psycopg2-binary
+alembic
+pydantic-settings
+python-jose[cryptography]
+passlib[argon2]
+argon2-cffi
+python-multipart
+email-validator
+slowapi
+pytesseract
+pillow

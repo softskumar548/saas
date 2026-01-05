@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Api } from '@shared/api-client';
 import { getPublicFormApiV1FormsPublicSlugGet, submitFeedbackApiV1FormsPublicFeedbackPost } from '@shared/api-client';
 import { ValuesCreate } from '@shared/api-client';
-import { environment } from '../../../../../../../apps/web-client/src/environments/environment';
+import { environment } from '../../../../../../apps/web-client/src/environments/environment';
 
 @Component({
   selector: 'lib-form-viewer',

@@ -24,7 +24,7 @@ class LeadBase(SQLModel):
     business_type: Optional[str] = None
     notes: Optional[str] = None
     status: LeadStatus = Field(default=LeadStatus.NEW)
-    assigned_to_id: Optional[int] = Field(default=None, foreign_key="user.id")
+    assigned_to_id: Optional[int] = Field(default=None, foreign_key="users.id")
 
 class Lead(LeadBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)

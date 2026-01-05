@@ -17,7 +17,7 @@ class TenantBase(SQLModel):
     billing_address: Optional[str] = None
     is_branding_approved: bool = Field(default=False)
     is_active: bool = True
-    assigned_fleeter_id: Optional[int] = Field(default=None, foreign_key="user.id")
+    assigned_fleeter_id: Optional[int] = Field(default=None, foreign_key="users.id")
 
 class Tenant(TenantBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)

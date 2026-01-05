@@ -21,7 +21,7 @@ class TaskBase(SQLModel):
     priority: TaskPriority = Field(default=TaskPriority.MEDIUM)
     notes: Optional[str] = None
     
-    assigned_to_id: int = Field(foreign_key="user.id")
+    assigned_to_id: int = Field(foreign_key="users.id")
     lead_id: Optional[int] = Field(default=None, foreign_key="lead.id", nullable=True)
     tenant_id: Optional[int] = Field(default=None, foreign_key="tenant.id", nullable=True)
 

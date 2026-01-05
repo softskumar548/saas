@@ -24,11 +24,13 @@ services:
     env: docker
     region: singapore
     plan: free
-    rootDir: .
+    rootDir: frontend
     dockerfilePath: frontend/apps/web-client/Dockerfile
     envVars:
       - key: NGINX_PORT
         value: "80"
+      - key: NODE_OPTIONS
+        value: "--max-old-space-size=460"
     autoDeploy: false
 
 databases:

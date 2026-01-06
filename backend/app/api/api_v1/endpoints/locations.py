@@ -97,7 +97,8 @@ def get_qr_image(
     if location.tenant_id != current_user.tenant_id:
         raise HTTPException(status_code=403, detail="Not authorized")
     
-    base_url = "http://localhost:4200" # TODO: Config
+    from app.core.config import settings
+    base_url = settings.FRONTEND_URL
     url = f"{base_url}/f/{form_slug}?loc={location.id}"
     
     img = qrcode.make(url)

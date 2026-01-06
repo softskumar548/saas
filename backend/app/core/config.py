@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "changethis_secret_key_for_development_only"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
     ALGORITHM: str = "HS256"
+    FRONTEND_URL: str = "http://localhost:4200"
 
     DATABASE_URL: str
 
